@@ -35,4 +35,4 @@ process.on("unhandledRejection", async (reason, promise) => {
   process.exit(1);
 });
 
-console.log("Soul Bot starting...");
+console.log("Birthday Bot starting...");

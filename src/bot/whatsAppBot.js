@@ -157,7 +157,7 @@ class WhatsAppBot {
       }
     } else if (connection === "open") {
       this.retryCount = 0; // Reset retry count on successful connection
-      console.log("🎉 Soul Bot is ready!");
+      console.log("🎉 Birthday Bot is ready!");
       console.log("Owner number configured as:", config.OWNER_NUMBER);
       console.log(
         `Send "${config.COMMAND_PREFIX} help" to see available commands`

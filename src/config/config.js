@@ -18,7 +18,7 @@ const path = require("path");
 module.exports = {
   // Bot configuration
   OWNER_NUMBER: process.env.OWNER_NUMBER,
-  COMMAND_PREFIX: process.env.COMMAND_PREFIX || "Soul,",
+  COMMAND_PREFIX: process.env.COMMAND_PREFIX || "Bot,",
   DEBUG_MODE: process.env.DEBUG_MODE === "true",
 
   // Logging configuration
@@ -38,6 +38,6 @@ module.exports = {
   LOG_FILE_PATH: process.env.LOG_FILE || "./wa-logs.txt",
 
   // Browser configuration
-  BROWSER_NAME: process.env.BAILEYS_BROWSER_NAME || "Soul Bot",
+  BROWSER_NAME: process.env.BAILEYS_BROWSER_NAME || "Birthday Bot",
   BROWSER_VERSION: process.env.BAILEYS_BROWSER_VERSION || "1.0.0",
 };

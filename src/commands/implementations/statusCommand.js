@@ -43,7 +43,7 @@ class StatusCommand extends BaseCommand {
       .replace("@s.whatsapp.net", "")
       .replace(/^(\d{2})(\d{10})$/, "$1$2");
 
-    const statusText = `🤖 *Soul Bot Status*
+    const statusText = `🤖 *Birthday Bot Status*
 
 _Bot Status:_ ${this.dataService.botConfig.active ? "🟢 Active" : "🔴 Inactive"}
 _Last Activity:_ ${new Date(

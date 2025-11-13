@@ -20,7 +20,7 @@ class HelpCommand extends BaseCommand {
     const senderId = message.key.remoteJid;
     const isOwner = this.isOwner(senderId);
 
-    let helpText = `🤖 *Soul Bot Commands* 🤖
+    let helpText = `🤖 *Birthday Bot Commands* 🤖
 
 _General Commands:_
 ${config.COMMAND_PREFIX} help - Shows this help menu
