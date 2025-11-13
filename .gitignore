@@ -1,0 +1,228 @@
+# ==========================================
+# Birthday Bot - Git Ignore Configuration
+# ==========================================
+
+# ====================
+# SENSITIVE DATA (CRITICAL!)
+# ====================
+
+# Environment variables - NEVER COMMIT!
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.*.local
+
+# WhatsApp authentication session - CONTAINS YOUR LOGIN!
+auth_info_baileys/
+auth_info_*
+
+# User data - Contains personal information
+src/data/*.json
+!src/data/.gitkeep
+
+# Backups - May contain sensitive data
+src/backups/*.json
+!src/backups/.gitkeep
+
+# Log files - May contain phone numbers
+*.log
+wa-logs.txt
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+
+# ====================
+# DEPENDENCIES
+# ====================
+
+# Node modules
+node_modules/
+jspm_packages/
+
+# Lock files (optional - some projects keep these)
+# Uncomment if you want to ignore:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+
+# ====================
+# BUILD & CACHE
+# ====================
+
+# Build outputs
+dist/
+build/
+out/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.npm/
+.eslintcache
+.node_repl_history
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+
+# ====================
+# TESTING
+# ====================
+
+# Test coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Jest cache
+.jest/
+
+
+# ====================
+# EDITORS & IDEs
+# ====================
+
+# Visual Studio Code
+.vscode/
+.vscode-test/
+*.code-workspace
+
+# JetBrains IDEs (IntelliJ, WebStorm, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+
+# ====================
+# OPERATING SYSTEMS
+# ====================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+
+# ====================
+# TEMPORARY FILES
+# ====================
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+
+# ====================
+# MISCELLANEOUS
+# ====================
+
+# TypeScript (if used in future)
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing
+.vscode-test
+
+
+# ====================
+# PROJECT TEST
+# ====================
+
+README.md
+CONTRIBUTING.md
+CHANGELOG.md
+LICENSE
