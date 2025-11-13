@@ -80,7 +80,7 @@ Before starting, install these on your system:
 ```bash
 # 1. Clone the repository
 git clone https://github.com/TheStoicSpirit/Whatsapp-Wishing-Bot
-cd birthday-bot
+cd .\Whatsapp-Wishing-Bot\
 
 # 2. Install dependencies
 npm install
