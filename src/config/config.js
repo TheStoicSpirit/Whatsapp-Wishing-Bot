@@ -18,15 +18,19 @@ const path = require("path");
 module.exports = {
   // Bot configuration
   OWNER_NUMBER: process.env.OWNER_NUMBER,
+  OWNER_LID: process.env.OWNER_LID || null, // NEW - Optional LID for newer WhatsApp accounts
   COMMAND_PREFIX: process.env.COMMAND_PREFIX || "Bot,",
   DEBUG_MODE: process.env.DEBUG_MODE === "true",
+
+  // Security configuration - NEW
+  REQUIRE_WHITELIST: process.env.REQUIRE_WHITELIST !== "false", // Default: true (secure)
 
   // Logging configuration
   LOGGING_MODE: process.env.LOGGING_MODE || "file", // "file", "console", "disabled"
 
   // File paths
   WISHES_FILE: path.join(__dirname, "../data/wishes.json"),
-  ARCHIVED_WISHES_FILE: path.join(__dirname, "../data/archived_wishes.json"), // NEW
+  ARCHIVED_WISHES_FILE: path.join(__dirname, "../data/archived_wishes.json"),
   GROUP_WISHES_FILE: path.join(__dirname, "../data/group_wishes.json"),
   USER_GROUPS_FILE: path.join(__dirname, "../data/user_groups.json"),
   WHITELIST_FILE: path.join(__dirname, "../data/whitelist.json"),

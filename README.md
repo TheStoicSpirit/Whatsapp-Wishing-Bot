@@ -4,334 +4,257 @@
 
 <img width="1536" height="431" alt="Birthday Bot Banner" src="https://github.com/user-attachments/assets/db7e4685-697e-4c9b-8ee7-264da7cb04a0" />
 
-**Automate your birthday wishes and be the first to wish at 12 AM! Schedule WhatsApp messages in advance and let the bot handle the rest.**
+**Schedule midnight wishes. Be first. Every time.**
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D16-brightgreen)](https://nodejs.org/)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue)](https://github.com/TheStoicSpirit/Whatsapp-Wishing-Bot/releases)
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Hosting](#-hosting-options) • [Commands](#-commands) • [Support](#-support)
+[Features](#-features) • [Install](#-installation) • [Commands](#-commands) • [Hosting](#-hosting) • [Support](#-support)
 
 </div>
 
 ---
 
-## 🌟 Why Birthday Bot?
+## 🌟 Why This Bot?
 
-**Be the first to wish!** 🎉
+Schedule WhatsApp messages for **12:00 AM** sharp. Always be first to wish birthdays, festivals, or any occasion. Set it, forget it, never miss it.
 
-Schedule birthday wishes for **12:00 AM** (midnight) and always be the first person to wish your friends and family. No more setting alarms or forgetting birthdays - Birthday Bot handles it all automatically.
-
-### Perfect For:
-
-- 🎂 **Birthday Wishes** - Schedule for exactly midnight, be the first to wish!
-- 🎉 **Festivals & Holidays** - New Year, Christmas, Diwali, Valentine's Day
-- 💼 **Team Reminders** - Meeting notifications and deadlines
-- 👨‍👩‍👧‍👦 **Family Check-ins** - Regular messages to loved ones
-- 📅 **Any Scheduled Message** - Anniversaries, appointments, follow-ups
+**Perfect For:** Birthdays • Festivals • Team reminders • Family check-ins • Any scheduled message
 
 ---
 
-## ✨ Key Features
+## ✨ Features
 
-### ⏰ Precise Scheduling
-
-- **Schedule to the minute** - Send at exactly 12:00 AM or any time
-- **Never forget again** - Set it once, bot handles the rest
-- **View all scheduled wishes** - Know what's coming up
-- **Midnight advantage** - Be the earliest to wish, always! 🌙
-
-### 📦 Smart Archive System
-
-- **Auto-archiving** - Sent messages moved to archives automatically
-- **Reschedule easily** - Reuse last year's wishes for this year
-- **Track delivery** - Know which messages were sent successfully
-- **Filter archives** - View by sent, failed, or manual archives
-
-### 👥 Group Management
-
-- **Create groups** - Organize contacts (family, friends, coworkers)
-- **Bulk messaging** - Send to entire groups at once
-- **Group scheduling** - Schedule messages for multiple people
-
-### 🔐 Secure & Private
-
-- **Whitelist control** - Only you and authorized users can use it
-- **Local data storage** - All data stays on your device
-- **Open source** - Fully transparent code
+- ⏰ **Midnight Precision** - Schedule to exact minute, especially 12:00 AM
+- 📦 **Smart Archives** - Auto-archive sent wishes, reschedule for next year
+- 👥 **Group Messaging** - Organize contacts, schedule bulk wishes
+- 🔐 **Security** - Whitelist control, LID/JID support, bot stays hidden
+- 💾 **Data Management** - JSON storage, backups, restore anytime
+- 🌐 **LID Support (v1.1)** - Works with both old and new WhatsApp formats
 
 ---
 
-## ⚡ Quick Start
+## 🚀 Installation
 
 ### Prerequisites
 
-Before starting, install these on your system:
+- Node.js 16+ ([Download](https://nodejs.org/))
+- Git ([Download](https://git-scm.com/))
+- WhatsApp account
 
-- **Node.js** (v16 or higher) - [Download here](https://nodejs.org/)
-- **Git** - [Download here](https://git-scm.com/)
-- **WhatsApp** account with active phone number
-
-> **Verify installation:** Run `node --version` and `git --version` in your terminal
-
----
-
-### Installation
+### Quick Start
 
 ```bash
-# 1. Clone the repository
+# Clone
 git clone https://github.com/TheStoicSpirit/Whatsapp-Wishing-Bot
-cd .\Whatsapp-Wishing-Bot\
+cd Whatsapp-Wishing-Bot
 
-# 2. Install dependencies
+# Install
 npm install
 
-# 3. Configure environment
+# Configure
 cp .env.example .env
-nano .env  # Edit with your WhatsApp number
+nano .env  # Set OWNER_NUMBER
 
-# 4. Start the bot
+# Run
 npm start
-```
-
-### Configuration
-
-Edit the `.env` file and set your WhatsApp number in JID format:
-
-```env
-# Your WhatsApp number (required)
-# Format: [country_code][number]@s.whatsapp.net
-# Example: +1 555-123-4567 → 15551234567@s.whatsapp.net
-OWNER_NUMBER=919876543210@s.whatsapp.net
-
-# Optional settings
-COMMAND_PREFIX=Bot,
-DEBUG_MODE=false
 ```
 
 ### First Connection
 
-1. Run `npm start`
-2. **Scan the QR code** with WhatsApp (Settings → Linked Devices)
-3. See "🎉 Birthday Bot is ready!"
-4. Send `Bot, help` to see commands
-
-**That's it!** 🎉 Your bot is now running.
+1. Scan QR code with WhatsApp (Settings → Linked Devices)
+2. **LID users:** Save your number, message yourself for commands
+3. Test: `Bot, checkid` - Verify your ID format
+4. Secure: Set `REQUIRE_WHITELIST=true` in .env
 
 ---
 
-## 🖥️ Hosting Options
+## 🔐 Security Setup
 
-> **Important:** The bot must run 24/7 to send scheduled messages. If your computer is off, messages won't be sent.
+**v1.1 introduces strict security mode:**
 
-### Option 1: Run on Your Computer (Free)
-
-**Pros:** Free, complete control  
-**Cons:** Computer must stay on 24/7
-
-```bash
-npm start
-# Keep terminal open and computer running
+```env
+# .env configuration
+REQUIRE_WHITELIST=true   # Strict: Only owner/whitelist (recommended)
+REQUIRE_WHITELIST=false  # Relaxed: Anyone uses help/checkid (setup only)
 ```
 
-### Option 2: Cloud Hosting (Recommended for 24/7)
+**First-Time Setup:**
 
-**Free Options:**
+1. Set `REQUIRE_WHITELIST=false`
+2. Run `Bot, checkid` to get your ID
+3. Add users: `Bot, whitelist [number] [name]`
+4. Enable: `REQUIRE_WHITELIST=true`
+5. Restart bot
 
-- **Railway.app** - Free tier with 500 hours/month
-- **Render.com** - Free tier available
-- **Fly.io** - Free tier with generous limits
-
-**Paid Options (Reliable 24/7):**
-
-- **DigitalOcean** - $5/month droplet
-- **AWS EC2** - t2.micro free tier (12 months)
-- **Heroku** - Starting at $7/month
-- **Google Cloud** - Free tier available
-
-**Setup Example (VPS/Linux Server):**
-
-```bash
-# Clone and install as above, then:
-npm install -g pm2
-pm2 start src/app.js --name birthday-bot
-pm2 startup  # Auto-start on reboot
-pm2 save
-```
-
-### Option 3: Raspberry Pi / Old Computer
-
-Turn an old computer or Raspberry Pi into a dedicated bot server. Perfect for 24/7 home operation!
-
-> **Note:** For cloud hosting, you'll need to keep the authentication by periodically accessing the server (auth expires after ~2 weeks of inactivity).
+**Strict mode:** Unauthorized users see nothing. Bot stays hidden. Maximum security.
 
 ---
 
-## 🎮 Usage Examples
+## 💬 Commands
 
-### Schedule a Midnight Birthday Wish
+### Essential
 
-```
-Bot, addwish 25/12/2025 00:00 919876543210@s.whatsapp.net "Happy Birthday! 🎂 Hope you have an amazing year ahead! 🎉"
-```
+| Command                             | Action                  | Example                                                                       |
+| ----------------------------------- | ----------------------- | ----------------------------------------------------------------------------- |
+| `checkid`                           | Check your ID format    | `Bot, checkid`                                                                |
+| `addwish [date] [time] [jid] [msg]` | Schedule wish           | `Bot, addwish 25/12/2025 00:00 919876543210@s.whatsapp.net "Happy Birthday!"` |
+| `listwishes`                        | View scheduled          | `Bot, listwishes`                                                             |
+| `listarchives [filter]`             | View sent wishes        | `Bot, listarchives sent`                                                      |
+| `reschedulewish [id] [date] [time]` | Reschedule from archive | `Bot, reschedulewish 1234567890 25/12/2026 00:00`                             |
+| `help`                              | All commands            | `Bot, help`                                                                   |
 
-_The bot will send this at exactly midnight on Dec 25th_
-
-### Schedule for 12:01 AM (Right After Midnight)
-
-```
-Bot, addwish 15/03/2026 00:01 918888888888@s.whatsapp.net "Happy Birthday Sarah! 🎈 Wishing you a wonderful day!"
-```
-
-_Perfect for being the first to wish!_
-
-### Create Groups for Easy Management
-
-```
-# Create a friends group
-Bot, creategroup close-friends "My closest friends"
-
-# Add members
-Bot, addtogroup close-friends 919999999999@s.whatsapp.net "Alice"
-Bot, addtogroup close-friends 918888888888@s.whatsapp.net "Bob"
-
-# Schedule group wish
-Bot, addgroupwish 01/01/2026 00:00 close-friends "Happy New Year everyone! 🎊"
-```
-
-### Reschedule from Archives (For Next Year)
-
-```
-# View sent wishes
-Bot, listarchives sent
-
-# Reschedule for next year
-Bot, reschedulewish 1234567890 25/12/2026 00:00
-```
-
----
-
-## 📚 Commands
-
-### Quick Reference
-
-| Command                                | What It Does            | Example                                                                       |
-| -------------------------------------- | ----------------------- | ----------------------------------------------------------------------------- |
-| `addwish [date] [time] [number] [msg]` | Schedule a wish         | `Bot, addwish 25/12/2025 00:00 919876543210@s.whatsapp.net "Happy Birthday!"` |
-| `listwishes`                           | View scheduled wishes   | `Bot, listwishes`                                                             |
-| `deletewish [id]`                      | Delete a wish           | `Bot, deletewish 1234567890`                                                  |
-| `listarchives [filter]`                | View sent wishes        | `Bot, listarchives sent`                                                      |
-| `reschedulewish [id] [date] [time]`    | Reschedule from archive | `Bot, reschedulewish 1234567890 25/12/2026 00:00`                             |
-| `help`                                 | Show all commands       | `Bot, help`                                                                   |
-
-**Date Format:** DD/MM/YYYY (e.g., 25/12/2025)  
-**Time Format:** HH:MM in 24-hour (e.g., 00:00 for midnight, 14:30 for 2:30 PM)  
-**Number Format:** Country code + number + @s.whatsapp.net (e.g., 919876543210@s.whatsapp.net)
+**Formats:** Date: DD/MM/YYYY • Time: HH:MM (24h) • Number: countrycode+number@s.whatsapp.net
 
 ### All Commands
 
 <details>
 <summary><b>📅 Wish Management</b></summary>
 
-- `addwish [date] [time] [jid] [message]` - Schedule new wish
-- `listwishes` - View all scheduled wishes
-- `deletewish [id]` - Delete scheduled wish
-- `archivewish [id]` - Manually archive wish
+- `addwish` - Schedule new
+- `listwishes` - View active
+- `deletewish [id]` - Delete scheduled
+- `archivewish [id]` - Manual archive
 </details>
 
 <details>
-<summary><b>📦 Archive Management</b></summary>
+<summary><b>📦 Archives</b></summary>
 
-- `listarchives [filter]` - View archives (sent/manual/expired/send_failed)
-- `reschedulewish [id] [date] [time]` - Reschedule archived wish
-- `deletearchivedwish [id]` - Delete archived wish permanently
+- `listarchives [filter]` - View (sent/manual/expired/send_failed)
+- `reschedulewish [id] [date] [time]` - Reactivate
+- `deletearchivedwish [id]` - Permanent delete
 </details>
 
 <details>
-<summary><b>👥 Group Management</b></summary>
+<summary><b>👥 Groups</b></summary>
 
-- `creategroup [name] [description]` - Create group
-- `listgroups` - View all groups
+- `creategroup [name] [desc]` - New group
 - `addtogroup [group] [jid] [name]` - Add member
-- `removefromgroup [group] [jid]` - Remove member
-- `listgroupmembers [group]` - View group members
-- `addgroupwish [date] [time] [group] [msg]` - Schedule group wish
-- `sendgroupwishnow [group] [message]` - Send immediate message
+- `removefromgroup [group] [jid]` - Remove
+- `listgroups` - View all
+- `listgroupmembers [group]` - View members
+- `addgroupwish [date] [time] [group] [msg]` - Schedule
+- `sendgroupwishnow [group] [msg]` - Send now
 </details>
 
 <details>
-<summary><b>🔧 Admin Commands (Owner Only)</b></summary>
+<summary><b>🔧 Admin (Owner Only)</b></summary>
 
-- `start` - Activate bot
-- `stop` - Deactivate bot
-- `status` - Show bot statistics
-- `whitelist [jid] [name]` - Add user to whitelist
-- `listwhitelist` - Show whitelisted users
-- `backup` - Create data backup
-- `restore [filename]` - Restore from backup
-- `cleararchives [keep_N]` - Clear old archives
+- `start/stop` - Bot control
+- `status` - Statistics
+- `whitelist [jid] [name]` - Add user
+- `listwhitelist` - View authorized
+- `backup` - Create backup
+- `restore [file]` - Restore data
+- `cleararchives [keep_N]` - Cleanup
 </details>
 
 ---
 
-## 🐛 Troubleshooting
+## 🖥️ Hosting
 
-### Bot Won't Connect?
+**Bot requires 24/7 uptime to send scheduled messages.**
+
+### Local (Free)
 
 ```bash
-# Delete auth folder and reconnect
-rm -rf auth_info_baileys
-npm start
-# Scan QR code again
+npm start  # Keep terminal open, computer on
 ```
 
-### Commands Not Working?
+### Cloud (Recommended)
 
-- Check if you're whitelisted: `Bot, listwhitelist` (owner only)
-- Verify bot is active: `Bot, status` (owner only)
-- Check command format matches examples
+**Free:** Railway.app • Render.com • Fly.io  
+**Paid:** DigitalOcean ($5/mo) • AWS EC2 • Heroku ($7/mo)
 
-### Scheduled Wishes Not Sending?
+**VPS Setup:**
 
-- **Is bot running?** Check your terminal/server
-- **Is computer on?** Bot must run 24/7 (see [Hosting Options](#-hosting-options))
-- **Correct date/time format?** Use DD/MM/YYYY and HH:MM
-- **Wish in active list?** Check with `Bot, listwishes`
+```bash
+npm install -g pm2
+pm2 start src/app.js --name birthday-bot
+pm2 startup
+pm2 save
+```
 
-### Can't Find Sent Wishes?
+### Home Server
 
-Sent wishes are automatically archived! View them with:
+Raspberry Pi or old computer = Perfect 24/7 bot server
+
+---
+
+## 🆘 Troubleshooting
+
+**Connection Issues**
+
+```bash
+rm -rf auth_info_baileys
+npm start
+```
+
+**Commands Not Working**
+
+- Check whitelist: `Bot, listwhitelist` (owner)
+- Check security: See `REQUIRE_WHITELIST` in .env
+- LID users: Message YOUR OWN number only
+
+**Scheduled Wishes Not Sending**
+
+- Bot running? Check terminal/server
+- Computer on? (Local hosting)
+- Format correct? DD/MM/YYYY HH:MM
+- Wish active? `Bot, listwishes`
+
+**Can't Find Sent Wishes**
+
+```bash
+Bot, listarchives sent  # Auto-archived after sending
+```
+
+**LID Format (New WhatsApp)**
+
+- Your ID changes per chat
+- Save your number as contact
+- Message yourself for commands
+- Check format: `Bot, checkid`
+
+---
+
+## 📝 Examples
+
+**Midnight Birthday:**
+
+```
+Bot, addwish 25/12/2025 00:00 919876543210@s.whatsapp.net "Happy Birthday! 🎂"
+```
+
+**Group Setup:**
+
+```
+Bot, creategroup family "Family Members"
+Bot, addtogroup family 919999999999@s.whatsapp.net "Mom"
+Bot, addgroupwish 01/01/2026 00:00 family "Happy New Year! 🎊"
+```
+
+**Reschedule Next Year:**
 
 ```
 Bot, listarchives sent
+Bot, reschedulewish 1234567890 25/12/2026 00:00
 ```
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Fork → Branch → Commit → Push → Pull Request
 
-**Quick steps:**
-
-1. Fork the repo
-2. Create branch: `git checkout -b feature/amazing-feature`
-3. Commit: `git commit -m "feat: add amazing feature"`
-4. Push: `git push origin feature/amazing-feature`
-5. Open Pull Request
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
 ## 📄 License
 
-This project is licensed under **GNU Affero General Public License v3.0** (AGPL-3.0).
-
-**TL;DR:**
-
-- ✅ Use for personal/commercial purposes
-- ✅ Modify and distribute
-- ❌ Cannot sell closed-source versions
-- ✔️ Must share modifications
-- ✔️ Must keep open source
+**AGPL v3.0** - Use freely, keep open source, share modifications.
 
 Full license: [LICENSE](LICENSE)
 
@@ -339,46 +262,31 @@ Full license: [LICENSE](LICENSE)
 
 ## ⚠️ Disclaimer
 
-**Not affiliated with WhatsApp Inc.** Use responsibly and follow [WhatsApp's Terms of Service](https://www.whatsapp.com/legal/terms-of-service).
-
-**Use for good:**
-
-- ✅ Personal reminders and legitimate communication
-- ✅ Birthday wishes and celebrations
-- ❌ Don't spam or harass
-- ❌ Don't send unsolicited messages
+Not affiliated with WhatsApp Inc. Use responsibly. Follow [WhatsApp ToS](https://www.whatsapp.com/legal/terms-of-service).
 
 ---
 
 ## 🙏 Credits
 
-- [Baileys](https://github.com/WhiskeySockets/Baileys) - WhatsApp Web API
-- [node-cron](https://github.com/node-cron/node-cron) - Scheduling
-- All contributors and users
+[Baileys](https://github.com/WhiskeySockets/Baileys) • [node-cron](https://github.com/node-cron/node-cron) • All contributors
 
 ---
+
 ## 📞 Support
-- 🐛 **Issues:** [GitHub Issues](https://github.com/TheStoicSpirit/Whatsapp-Wishing-Bot/issues)
-- 💬 **Discussions:** [GitHub Discussions](https://github.com/TheStoicSpirit/Whatsapp-Wishing-Bot/discussions)
----
 
-## ⭐ Show Your Support
-
-If Birthday Bot helps you never miss a birthday, please:
-
-- ⭐ Star this repo
-- 🍴 Fork and contribute
-- 📢 Share with friends
-- 🐛 Report bugs
+- 🐛 [Issues](https://github.com/TheStoicSpirit/Whatsapp-Wishing-Bot/issues)
+- 💬 [Discussions](https://github.com/TheStoicSpirit/Whatsapp-Wishing-Bot/discussions)
 
 ---
+
+## ⭐ Support This Project
+
+Star • Fork • Share • Contribute • Report bugs
 
 <div align="center">
 
 **Made with ❤️ for everyone who forgets birthdays**
 
-**Never be late to wish again!** 🎂🎉
-
-[![GitHub Stars](https://img.shields.io/github/TheStoicSpirit/Whatsapp-Wishing-Bot/?style=social)](https://github.com/TheStoicSpirit/Whatsapp-Wishing-Bot/)
+[![GitHub Stars](https://img.shields.io/github/stars/TheStoicSpirit/Whatsapp-Wishing-Bot?style=social)](https://github.com/TheStoicSpirit/Whatsapp-Wishing-Bot)
 
 </div>

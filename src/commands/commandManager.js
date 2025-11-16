@@ -13,6 +13,8 @@
  * GNU Affero General Public License for more details.
  */
 const CommandParser = require("./commandParser");
+const config = require("../config/config");
+const { matchesPhoneNumber } = require("../utils/validators");
 
 // Import all command implementations
 const HelpCommand = require("./implementations/helpCommand");
@@ -51,7 +53,7 @@ const {
   ArchiveOldWishesCommand,
 } = require("./implementations/adminCommands");
 
-// Archive Commands - NEW
+// Archive Commands
 const {
   ListArchivedWishesCommand,
   RescheduleArchivedWishCommand,
@@ -59,12 +61,18 @@ const {
   ClearArchivedWishesCommand,
 } = require("./implementations/archiveCommands");
 
+// Utility Commands
+const CheckIdCommand = require("./implementations/checkIdCommand");
+
 class CommandManager {
   constructor(dataService, messageService) {
     this.dataService = dataService;
     this.messageService = messageService;
     this.commandParser = new CommandParser();
     this.commands = new Map();
+
+    // Commands that don't require whitelist (when REQUIRE_WHITELIST=false)
+    this.publicCommands = new Set(["help", "checkid"]);
 
     this.registerCommands();
   }
@@ -78,6 +86,10 @@ class CommandManager {
     this.commands.set(
       "status",
       new StatusCommand(this.dataService, this.messageService)
+    );
+    this.commands.set(
+      "checkid",
+      new CheckIdCommand(this.dataService, this.messageService)
     );
 
     // Wish Management Commands
@@ -98,7 +110,7 @@ class CommandManager {
       new ListWishesCommand(this.dataService, this.messageService)
     );
 
-    // Archive Management Commands - NEW
+    // Archive Management Commands
     this.commands.set(
       "listarchives",
       new ListArchivedWishesCommand(this.dataService, this.messageService)
@@ -206,13 +218,55 @@ class CommandManager {
       const parsedCommand = this.commandParser.parse(messageText);
       if (!parsedCommand) return;
 
-      const command = this.commands.get(parsedCommand.command);
+      const commandName = parsedCommand.command;
+      const command = this.commands.get(commandName);
+
       if (!command) {
-        await this.messageService.sendMessage(
-          senderId,
-          `❌ Unknown command: ${parsedCommand.command}\n\nType "help" for available commands.`
-        );
+        // Unknown command - check whitelist before responding
+        if (this.isWhitelisted(senderId)) {
+          await this.messageService.sendMessage(
+            senderId,
+            `❌ Unknown command: ${commandName}\n\nType "${config.COMMAND_PREFIX} help" for available commands.`
+          );
+        }
+        // Silently ignore for non-whitelisted users
         return;
+      }
+
+      // Security Check: REQUIRE_WHITELIST mode
+      if (config.REQUIRE_WHITELIST) {
+        // Strict mode: ALL commands require whitelist
+        if (!this.isWhitelisted(senderId)) {
+          if (config.DEBUG_MODE) {
+            console.log(
+              `🔒 Blocked command "${commandName}" from non-whitelisted user: ${senderId}`
+            );
+          }
+          // Silently ignore - don't reveal bot exists
+          return;
+        }
+      } else {
+        // Relaxed mode: Only public commands allowed without whitelist
+        if (
+          !this.publicCommands.has(commandName) &&
+          !this.isWhitelisted(senderId)
+        ) {
+          if (config.DEBUG_MODE) {
+            console.log(
+              `🔒 Blocked command "${commandName}" from non-whitelisted user: ${senderId}`
+            );
+          }
+          // Send helpful message for setup commands
+          await this.messageService.sendMessage(
+            senderId,
+            `🔒 This command requires authorization.\n\n` +
+              `You can use:\n` +
+              `• ${config.COMMAND_PREFIX} help - View available commands\n` +
+              `• ${config.COMMAND_PREFIX} checkid - Check your WhatsApp ID\n\n` +
+              `To use other commands, contact the bot owner.`
+          );
+          return;
+        }
       }
 
       // Update last activity
@@ -221,17 +275,23 @@ class CommandManager {
 
       // Execute command
       await command.execute(message, parsedCommand.args);
+
+      if (config.DEBUG_MODE) {
+        console.log(`✅ Executed command "${commandName}" for: ${senderId}`);
+      }
     } catch (error) {
       console.error("Error processing message:", error);
 
-      // Send error message to user
-      try {
-        await this.messageService.sendMessage(
-          message.key.remoteJid,
-          "❌ An error occurred while processing your command. Please try again."
-        );
-      } catch (sendError) {
-        console.error("Error sending error message:", sendError);
+      // Only send error to whitelisted users
+      if (this.isWhitelisted(message.key.remoteJid)) {
+        try {
+          await this.messageService.sendMessage(
+            message.key.remoteJid,
+            "❌ An error occurred while processing your command. Please try again."
+          );
+        } catch (sendError) {
+          console.error("Error sending error message:", sendError);
+        }
       }
     }
   }
@@ -245,8 +305,24 @@ class CommandManager {
   }
 
   isOwner(jid) {
-    const config = require("../config/config");
-    return jid === config.OWNER_NUMBER;
+    return (
+      matchesPhoneNumber(jid, config.OWNER_NUMBER) ||
+      (config.OWNER_LID && jid === config.OWNER_LID)
+    );
+  }
+
+  isWhitelisted(jid) {
+    // Owner is always whitelisted
+    if (this.isOwner(jid)) return true;
+
+    // Check whitelist using phone number matching
+    const { normalizePhoneNumber } = require("../utils/validators");
+    const senderPhone = normalizePhoneNumber(jid);
+
+    return this.dataService.whitelist.some((whitelistedJid) => {
+      const whitelistedPhone = normalizePhoneNumber(whitelistedJid);
+      return senderPhone === whitelistedPhone && senderPhone !== "";
+    });
   }
 }
 

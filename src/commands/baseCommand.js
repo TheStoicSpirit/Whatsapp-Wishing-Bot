@@ -13,6 +13,10 @@
  * GNU Affero General Public License for more details.
  */
 const config = require("../config/config");
+const {
+  matchesPhoneNumber,
+  normalizePhoneNumber,
+} = require("../utils/validators");
 
 class BaseCommand {
   constructor(dataService, messageService) {
@@ -29,11 +33,41 @@ class BaseCommand {
   }
 
   isOwner(jid) {
-    return jid === config.OWNER_NUMBER;
+    // Check against owner number (works with both JID and LID)
+    const isOwnerByNumber = matchesPhoneNumber(jid, config.OWNER_NUMBER);
+
+    // If owner has configured a specific LID, also check that
+    const isOwnerByLID = config.OWNER_LID && jid === config.OWNER_LID;
+
+    return isOwnerByNumber || isOwnerByLID;
   }
 
   isWhitelisted(jid) {
-    return this.isOwner(jid) || this.dataService.whitelist.includes(jid);
+    // Owner is always whitelisted
+    if (this.isOwner(jid)) return true;
+
+    // Extract phone number from sender
+    const senderPhone = normalizePhoneNumber(jid);
+
+    // Check against whitelist using phone number comparison
+    const isInWhitelist = this.dataService.whitelist.some((whitelistedJid) => {
+      const whitelistedPhone = normalizePhoneNumber(whitelistedJid);
+      return senderPhone === whitelistedPhone && senderPhone !== "";
+    });
+
+    // DEBUG: Log whitelist check in debug mode
+    if (config.DEBUG_MODE) {
+      console.log(`🔐 Whitelist Check:`);
+      console.log(`   Sender JID: ${jid}`);
+      console.log(`   Sender Phone: ${senderPhone}`);
+      console.log(`   Is Owner: ${this.isOwner(jid)}`);
+      console.log(`   Is Whitelisted: ${isInWhitelist}`);
+      console.log(
+        `   Whitelist: ${JSON.stringify(this.dataService.whitelist)}`
+      );
+    }
+
+    return isInWhitelist;
   }
 
   // Utility method for splitting long messages
@@ -66,6 +100,7 @@ class BaseCommand {
     }
 
     const chunks = this.splitMessage(text, maxLength);
+
     for (let i = 0; i < chunks.length; i++) {
       await this.sendMessage(jid, chunks[i]);
       if (i < chunks.length - 1) {
